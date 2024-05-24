@@ -1,0 +1,104 @@
+// agregar un Enum al migrar a postgres, ya que en sqlite no existe los enum
+// enum PaymentType {
+//   multa
+//   cuota
+//   derechoPartido
+// }
+// num AmonestationType {
+//   multa
+//   cuota
+//   derechoPartido
+// }
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  username String @unique
+  name     String
+  contact  String
+}
+
+model Club {
+  id                 Int            @id @default(autoincrement())
+  badge              String?
+  InscriptionPayment Boolean
+  players            Player[]
+  firstTeamMatches   Match[]        @relation(name: "FirstTeamMatches")
+  secondTeamMatches  Match[]        @relation(name: "SecondTeamMatches")
+  payments           Payment[]
+  amonestations      Amonestation[]
+}
+
+model Player {
+  id             Int              @id @default(autoincrement())
+  teamId         Int
+  documentNumber Int
+  promYear       Int
+  phoneNumber    Int?
+  Club           Club             @relation(fields: [teamId], references: [id])
+  matches        PlayersOnMatch[]
+  payments       Payment[]
+  amonestations  Amonestation[]
+}
+
+model Match {
+  id            Int              @id @default(autoincrement())
+  firstTeamId   Int
+  FirstTeam     Club             @relation(name: "FirstTeamMatches", fields: [firstTeamId], references: [id])
+  secondTeamId  Int
+  SecondTeam    Club             @relation(name: "SecondTeamMatches", fields: [secondTeamId], references: [id])
+  players       PlayersOnMatch[]
+  amonestations Amonestation[]
+}
+
+model PlayersOnMatch {
+  id       Int    @id @default(autoincrement())
+  Player   Player @relation(fields: [playerId], references: [id])
+  playerId Int
+  Match    Match  @relation(fields: [matchId], references: [id])
+  matchId  Int
+  goals    Int?
+  yellow   Int?
+  red      Int?
+}
+
+//revisar si es necesario club y player
+model Payment {
+  id            Int            @id @default(autoincrement())
+  Club          Club?          @relation(fields: [clubId], references: [id])
+  clubId        Int?
+  Player        Player?        @relation(fields: [playerId], references: [id])
+  playerId      Int?
+  type          String
+  price         Int
+  deadline      DateTime
+  paid          Boolean
+  paydate       DateTime?
+  amonestations Amonestation[]
+}
+
+model Amonestation {
+  id Int @id @default(autoincrement())
+
+  Player         Player?  @relation(fields: [playerId], references: [id])
+  playerId       Int?
+  Club           Club     @relation(fields: [clubId], references: [id])
+  clubId         Int
+  Match          Match?   @relation(fields: [matchId], references: [id])
+  matchId        Int?
+  Payment        Payment? @relation(fields: [paymentId], references: [id])
+  paymentId      Int?
+  type           String
+  observation    String
+  pointsDeducted Int
+  matchesToPay   Int?
+  matchesPaid    Int?
+}
