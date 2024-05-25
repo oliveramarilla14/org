@@ -1,4 +1,3 @@
-import { json } from 'express';
 import { prisma } from '../database/database.js';
 
 export async function getClubs(req, res) {
@@ -14,6 +13,11 @@ export async function getClubs(req, res) {
 export async function getClub(req, res) {
   // posicion en tabla, goles, proximo partido, jugadores(goles,partidos,jugados,cuota,tarjetas)
   const id = parseInt(req.params.id);
+
+  if (isNaN(id)) {
+    return res.status(406).json({ msg: 'id invalido' });
+  }
+
   const today = new Date();
   try {
     const club = await prisma.club.findFirstOrThrow({
@@ -100,6 +104,26 @@ export async function deleteClub(req, res) {
     if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos invalidos' });
     if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el club' });
 
+    res.json(error);
+  }
+}
+
+export async function clubPositions(req, res) {
+  //posicion - equipo(link al perfil del equipo)- Puntos - Partidos (jugados - GEP - GF -GC -DF
+  try {
+    const stats = await prisma.clubStats.findMany({
+      include: {
+        Club: {
+          select: {
+            name: true,
+            badge: true
+          }
+        }
+      }
+    });
+
+    return res.json(stats);
+  } catch (error) {
     res.json(error);
   }
 }
