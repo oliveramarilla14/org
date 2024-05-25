@@ -29,24 +29,55 @@ model User {
 model Club {
   id                 Int            @id @default(autoincrement())
   badge              String?
-  InscriptionPayment Boolean
+  name               String         @unique
+  inscriptionPayment Boolean        @default(false)
   players            Player[]
   firstTeamMatches   Match[]        @relation(name: "FirstTeamMatches")
   secondTeamMatches  Match[]        @relation(name: "SecondTeamMatches")
   payments           Payment[]
   amonestations      Amonestation[]
+  Stats              ClubStats?
+}
+
+model ClubStats {
+  clubId   Int  @id
+  Club     Club @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  position Int?
+  played   Int  @default(0)
+  win      Int  @default(0)
+  draw     Int  @default(0)
+  loose    Int  @default(0)
+  goals    Int  @default(0)
+  conceed  Int  @default(0)
+  yellows  Int  @default(0)
+  reds     Int  @default(0)
 }
 
 model Player {
   id             Int              @id @default(autoincrement())
   teamId         Int
-  documentNumber Int
+  documentNumber Int              @unique
   promYear       Int
   phoneNumber    Int?
   Club           Club             @relation(fields: [teamId], references: [id])
   matches        PlayersOnMatch[]
   payments       Payment[]
   amonestations  Amonestation[]
+  Stats          PlayerStats?
+}
+
+model PlayerStats {
+  playerId   Int    @id
+  Player     Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  goalscorer Int?
+  played     Int    @default(0)
+  win        Int    @default(0)
+  draw       Int    @default(0)
+  loose      Int    @default(0)
+  goals      Int    @default(0)
+  conceed    Int    @default(0)
+  yellows    Int    @default(0)
+  reds       Int    @default(0)
 }
 
 model Match {
@@ -55,6 +86,7 @@ model Match {
   FirstTeam     Club             @relation(name: "FirstTeamMatches", fields: [firstTeamId], references: [id])
   secondTeamId  Int
   SecondTeam    Club             @relation(name: "SecondTeamMatches", fields: [secondTeamId], references: [id])
+  result        String?
   players       PlayersOnMatch[]
   amonestations Amonestation[]
 }
@@ -80,7 +112,7 @@ model Payment {
   type          String
   price         Int
   deadline      DateTime
-  paid          Boolean
+  paid          Boolean        @default(false)
   paydate       DateTime?
   amonestations Amonestation[]
 }
@@ -97,8 +129,8 @@ model Amonestation {
   Payment        Payment? @relation(fields: [paymentId], references: [id])
   paymentId      Int?
   type           String
-  observation    String
-  pointsDeducted Int
+  observation    String?
+  pointsDeducted Int?
   matchesToPay   Int?
   matchesPaid    Int?
 }

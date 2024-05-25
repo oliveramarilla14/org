@@ -1,13 +1,10 @@
 import { Router } from 'express';
-import { app } from '../server.js';
 import clubRouter from './clubRouter.js';
 
 const router = Router();
 
-router.use('/', () => {
-  app.use('/clubs', clubRouter);
-});
+export function routerApiV1(app) {
+  app.use('/api/v1', router);
 
-export default router;
-
-Arr;
+  router.use('/clubs', clubRouter);
+}
