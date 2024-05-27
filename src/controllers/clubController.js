@@ -44,7 +44,7 @@ export async function getClub(req, res) {
     return res.json(club);
   } catch (error) {
     if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el club' });
-    return res.json(error);
+    return res.status(500).json(error);
   }
 }
 
@@ -65,11 +65,11 @@ export async function createClub(req, res) {
         Stats: true
       }
     });
-    return res.json(club);
+    return res.status(201).json(club);
   } catch (error) {
     if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos invalidos' });
     if (error.code === 'P2002') return res.status(409).json({ msg: `Ya existe el equipo con el nombre ${data.name}` });
-    return res.json(error);
+    return res.status(500).json(error);
   }
 }
 
@@ -83,13 +83,13 @@ export async function updateClub(req, res) {
       data
     });
 
-    return res.json(club);
+    return res.status(202).json(club);
   } catch (error) {
     if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos invalidos' });
     if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el club' });
     if (error.code === 'P2002') return res.status(409).json({ msg: `Ya existe el equipo con el nombre ${data.name}` });
 
-    res.json(error);
+    res.status(500).json(error);
   }
 }
 
@@ -99,12 +99,12 @@ export async function deleteClub(req, res) {
   try {
     const club = await prisma.club.delete({ where: { id } });
 
-    return res.json(club);
+    return res.status(202).json(club);
   } catch (error) {
     if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos invalidos' });
     if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el club' });
 
-    res.json(error);
+    res.status(500).json(error);
   }
 }
 
@@ -122,8 +122,8 @@ export async function clubPositions(req, res) {
       }
     });
 
-    return res.json(stats);
+    return res.status(200).json(stats);
   } catch (error) {
-    res.json(error);
+    res.status(500).json(error);
   }
 }
