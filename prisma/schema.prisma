@@ -43,6 +43,7 @@ model ClubStats {
   clubId   Int  @id
   Club     Club @relation(fields: [clubId], references: [id], onDelete: Cascade)
   position Int?
+  points   Int  @default(0)
   played   Int  @default(0)
   win      Int  @default(0)
   draw     Int  @default(0)
@@ -134,4 +135,5 @@ model Amonestation {
   pointsDeducted Int?
   matchesToPay   Int?
   matchesPaid    Int?
+  createdAt      DateTime @default(now())
 }

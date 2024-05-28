@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "express-validator": "^7.1.0"
   }
 }
