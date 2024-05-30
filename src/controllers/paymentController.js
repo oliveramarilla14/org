@@ -4,6 +4,7 @@ export async function getCuotas(req, res) {
   // jugador - equipo - cuotas (pagadas/pendientes)
   //fitro de busqueda para nombre de jugador y nombre de club
   const queryParams = req.query;
+  //refactor esta parte como amonestation controller
   let name = '';
   let club = '';
   let noPaid = false;
@@ -36,6 +37,27 @@ export async function getCuotas(req, res) {
   }
 }
 
+export async function createCuota(req, res) {
+  const data = req.body;
+  const precio = parseInt(process.env.MONTH_SOCIAL_PRICE);
+  const vencimiento = new Date(`${process.env.MONTH_SOCIAL_PAY_DAY}-${data.month}-2024`);
+
+  try {
+    const cuota = await prisma.payment.create({
+      data: {
+        clubId: data.club,
+        playerId: data.player,
+        type: 'cuota',
+        deadline: vencimiento,
+        price: precio
+      }
+    });
+    return res.status(201).json(cuota);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+}
 export async function payCuota(req, res) {
   const id = parseInt(req.params.id);
   try {
