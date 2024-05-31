@@ -137,3 +137,22 @@ model Amonestation {
   matchesPaid    Int?
   createdAt      DateTime @default(now())
 }
+
+model Config {
+  id                  Int     @id @default(autoincrement())
+  matchStartTime      String
+  matchEndTime        String
+  matchDuration       String
+  matchInterval       String
+  matchPrice          Int
+  yellowCardPrice     Int
+  redCardPrice        Int
+  yellowCardMatches   Int
+  yellowAmountToMatch Int
+  redCardMatches      Int
+  woAmonestation      Boolean
+  woPrice             Int
+  inscriptionPrice    Int
+  monthSocialPrice    Int
+  monthSocialPayDay   Int
+}

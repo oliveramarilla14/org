@@ -8,10 +8,11 @@ trabajar en modulo de multas, parecido a cuotas
 ## todo
 
 implementar validaciones en controlador de payment,player y club
+usar modelo de config para crear las configuraciones, al cargar la app que haga un fetch y que luego solo se guarde en una variable que se exporte asi evitar hacer peticiones en exceso
 
 ## done
 
-verificar si es mejor tener las configuraciones en el .env o si mejor tener en la base de datos ya que no actualiza al cambiar el .env
+crear modelo de config
 editar las amonestaciones
 validacion en amonestaciones
 logica de pago de amonestaciones
