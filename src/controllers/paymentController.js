@@ -38,9 +38,10 @@ export async function getCuotas(req, res) {
 }
 
 export async function createCuota(req, res) {
+  const config = await prisma.config.findFirst({ where: { id: 1 } });
   const data = req.body;
-  const precio = parseInt(process.env.MONTH_SOCIAL_PRICE);
-  const vencimiento = new Date(`${process.env.MONTH_SOCIAL_PAY_DAY}-${data.month}-2024`);
+  const precio = config.monthSocialPrice;
+  const vencimiento = new Date(`${config.monthSocialPayDay}-${data.month}-2024`);
 
   try {
     const cuota = await prisma.payment.create({
@@ -58,6 +59,7 @@ export async function createCuota(req, res) {
     return res.status(500).json(error);
   }
 }
+
 export async function payCuota(req, res) {
   const id = parseInt(req.params.id);
   try {
@@ -116,4 +118,93 @@ export async function cancelPayCuota(req, res) {
   }
 }
 
-export async function getCuota(req, res) {}
+export async function getMultas(req, res) {
+  const queryParams = req.query;
+  //refactor esta parte como amonestation controller
+  let name = '';
+  let club = '';
+  let noPaid = false;
+
+  if (queryParams.name) name = queryParams.name;
+  if (queryParams.club) club = queryParams.club;
+
+  const whereClause = {
+    NOT: {
+      type: 'cuota'
+    },
+    Player: { name: { contains: name } },
+    Club: { name: { contains: club } }
+  };
+
+  if (noPaid) {
+    whereClause.paid = false;
+  }
+
+  try {
+    const multas = await prisma.payment.findMany({
+      where: whereClause,
+      include: {
+        Club: true,
+        Player: true
+      }
+    });
+
+    return res.json({ multas });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+}
+
+export async function createMulta(req, res) {
+  const data = req.body;
+
+  try {
+    const multa = await prisma.payment.create({
+      data: {
+        ...data
+      }
+    });
+
+    return res.status(201).json(multa);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+}
+
+export async function editMulta(req, res) {
+  const id = parseInt(req.params.id);
+  const data = req.body;
+
+  try {
+    const multa = await prisma.payment.update({
+      where: { id },
+      data
+    });
+
+    return res.status(202).json(multa);
+  } catch (error) {
+    console.log(error);
+
+    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos invalidos' });
+    if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el club' });
+    res.status(500).json(error);
+  }
+}
+
+export async function deleteMulta(req, res) {
+  const id = parseInt(req.params.id);
+  try {
+    const multa = await prisma.payment.delete({ where: { id } });
+
+    return res.status(202).json(multa);
+  } catch (error) {
+    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos invalidos' });
+    if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe' });
+
+    res.status(500).json(error);
+  }
+}
+export async function payMulta(req, res) {}
+
+export async function cancelPayMulta(req, res) {}

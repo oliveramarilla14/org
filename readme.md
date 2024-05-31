@@ -3,7 +3,7 @@
 ## on work
 
 payment router
-trabajar en modulo de multas, parecido a cuotas
+trabajar en modulo de multas, parecido a cuotas, queda pay cuota y cancel pay
 
 ## todo
 
@@ -12,6 +12,7 @@ usar modelo de config para crear las configuraciones, al cargar la app que haga 
 
 ## done
 
+configurar configuraciones para trabajar con la base de datos
 crear modelo de config
 editar las amonestaciones
 validacion en amonestaciones
