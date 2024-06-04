@@ -2,6 +2,8 @@
 
 ## on work
 
+hacer generador de fixtures y corregir
+
 ## todo
 
 - pensar estructura para fixtures
