@@ -1,13 +1,15 @@
 import { Router } from 'express';
 import {
   cancelPayCuota,
+  cancelPayMulta,
   createCuota,
   createMulta,
   deleteMulta,
   editMulta,
   getCuotas,
   getMultas,
-  payCuota
+  payCuota,
+  payMulta
 } from '../controllers/paymentController.js';
 import { CuotaValidator, multaValidator } from '../validations/paymentValidation.js';
 
@@ -22,7 +24,7 @@ router.get('/multas', getMultas);
 router.post('/multas', multaValidator, createMulta);
 router.put('/multas/:id', multaValidator, editMulta);
 router.delete('/multas/:id', deleteMulta);
-router.post('/multas/:id/pay');
-router.delete('/multas/:id/pay');
+router.post('/multas/:id/pay', payMulta);
+router.delete('/multas/:id/pay', cancelPayMulta);
 
 export default router;

@@ -88,6 +88,7 @@ model Match {
   FirstTeam     Club             @relation(name: "FirstTeamMatches", fields: [firstTeamId], references: [id])
   secondTeamId  Int
   SecondTeam    Club             @relation(name: "SecondTeamMatches", fields: [secondTeamId], references: [id])
+  fecha         Int
   result        String?
   players       PlayersOnMatch[]
   amonestations Amonestation[]

@@ -2,18 +2,19 @@
 
 ## on work
 
-payment router
-trabajar en modulo de multas, parecido a cuotas, queda pay cuota y cancel pay
-
 ## todo
 
-implementar validaciones en controlador de payment,player y club
-usar modelo de config para crear las configuraciones, al cargar la app que haga un fetch y que luego solo se guarde en una variable que se exporte asi evitar hacer peticiones en exceso
+- pensar estructura para fixtures
 
 ## done
 
-configurar configuraciones para trabajar con la base de datos
-crear modelo de config
-editar las amonestaciones
-validacion en amonestaciones
-logica de pago de amonestaciones
+- crear seeders
+  usar modelo de config para crear las configuraciones, al cargar la app que haga un fetch y que luego solo se guarde en una variable que se exporte asi evitar hacer peticiones en exceso
+  implementar validaciones en controlador de payment,player y club
+  payment router
+  trabajar en modulo de multas, parecido a cuotas, queda pay cuota y cancel pay
+  configurar configuraciones para trabajar con la base de datos
+  crear modelo de config
+  editar las amonestaciones
+  validacion en amonestaciones
+  logica de pago de amonestaciones

@@ -205,6 +205,60 @@ export async function deleteMulta(req, res) {
     res.status(500).json(error);
   }
 }
-export async function payMulta(req, res) {}
+export async function payMulta(req, res) {
+  const id = parseInt(req.params.id);
+  try {
+    const multa = await prisma.$transaction(async (prisma) => {
+      const check = await prisma.payment.findUniqueOrThrow({
+        where: { id }
+      });
 
-export async function cancelPayMulta(req, res) {}
+      if (check.paid) {
+        throw new Error('La multa ya se encuentra pagada');
+      }
+
+      return await prisma.payment.update({
+        where: { id },
+        data: {
+          paid: true,
+          paydate: new Date()
+        }
+      });
+    });
+
+    return res.status(202).json(multa);
+  } catch (error) {
+    if (error.code === 'P2025') return res.status(404).json({ msg: 'No se encuentra la multa' });
+    if (error.message === 'La multa ya se encuentra pagada') return res.status(409).json({ msg: error.message });
+
+    return res.status(500).json(error);
+  }
+}
+
+export async function cancelPayMulta(req, res) {
+  const id = parseInt(req.params.id);
+
+  try {
+    const multa = await prisma.$transaction(async (prismaT) => {
+      const check = await prismaT.payment.findUniqueOrThrow({
+        where: { id }
+      });
+
+      if (!check.paid) throw new Error('La multa aun no se pago');
+
+      return prismaT.payment.update({
+        where: { id },
+        data: {
+          paid: false,
+          paydate: null
+        }
+      });
+    });
+
+    return res.status(202).json({ multa });
+  } catch (error) {
+    if (error.code === 'P2025') return res.status(404).json({ msg: 'No se encuentra la multa' });
+    if (error.message === 'La multa aun no se pago') return res.status(409).json({ msg: error.message });
+    res.status(500).json(error);
+  }
+}
