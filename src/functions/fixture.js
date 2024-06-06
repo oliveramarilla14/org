@@ -1,23 +1,35 @@
-export function generateFix(clubs) {
+import { format, addMinutes, parse } from 'date-fns';
+
+//leer documentacion
+function addMinutesToTime(time, minutes) {
+  const parsedTime = parse(time, 'HH:mm', new Date());
+  const newTime = addMinutes(parsedTime, minutes);
+  return format(newTime, 'HH:mm');
+}
+
+export function generateFix(clubs, config) {
   const clubsId = clubs.map((club) => club.name);
-  // const clubsId = [1, 2, 3, 4, 5];
+  console.log(config);
 
   if (clubsId.length % 2 !== 0) clubsId.push('descanso');
 
   const fechas = clubsId.length - 1;
   const fixture = [];
+  const { matchStartTime, matchDuration } = config;
 
-  // Generar las rotaciones de acuerdo al algoritmo round-robin
   const emparejamientos = generateRoundRobin(clubsId);
 
   for (let fecha = 0; fecha < fechas; fecha++) {
+    let hora = matchStartTime - matchDuration;
     const matches = emparejamientos[fecha];
     matches.sort(function () {
       return Math.random() - 0.5;
     });
     matches.forEach((match) => {
       if (match[0] === 'descanso' || match[1] === 'descanso') return;
-      fixture.push({ team1: match[0], team2: match[1], fecha: fecha + 1 });
+      hora = hora = addMinutesToTime(hora, matchDuration);
+
+      fixture.push({ team1: match[0], team2: match[1], fecha: fecha + 1, hora });
     });
   }
   return fixture;

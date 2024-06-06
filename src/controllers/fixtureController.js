@@ -18,8 +18,9 @@ export async function getFecha(req, res) {
 
 export async function generateFixture(req, res) {
   const clubs = await prisma.club.findMany();
+  const config = await prisma.config.findFirst();
 
-  const fixture = generateFix(clubs);
+  const fixture = generateFix(clubs, config);
 
   res.json(fixture);
 }
