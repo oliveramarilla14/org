@@ -3,6 +3,7 @@
 ## on work
 
 hacer generador de fixtures y corregir
+ya se creo los emparejamientos, ahora crear la parte de logica para los horarios
 
 ## todo
 

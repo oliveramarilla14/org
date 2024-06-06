@@ -12,3 +12,13 @@ export function numbersArray(numero) {
 
   return array;
 }
+
+export function randomFromArray(array) {
+  if (!Array.isArray(array) || array.length === 0) {
+    throw new Error('El parámetro debe ser un array no vacío');
+  }
+
+  const indiceAleatorio = Math.floor(Math.random() * array.length);
+
+  return array[indiceAleatorio];
+}
