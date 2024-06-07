@@ -90,7 +90,7 @@ model Match {
   SecondTeam    Club             @relation(name: "SecondTeamMatches", fields: [secondTeamId], references: [id])
   hora          String?
   fecha         Int
-  result        String?
+  result        Int? // id del ganador, o si empate 0
   players       PlayersOnMatch[]
   amonestations Amonestation[]
 }
@@ -144,7 +144,7 @@ model Config {
   id                  Int     @id @default(autoincrement())
   matchStartTime      String
   matchEndTime        String
-  matchDuration       String
+  matchDuration       Int
   matchInterval       String
   matchPrice          Int
   yellowCardPrice     Int
