@@ -101,7 +101,7 @@ export async function deleteClub(req, res) {
 
     return res.status(202).json(club);
   } catch (error) {
-    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos invalidos' });
+    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos inválidos' });
     if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el club' });
 
     res.status(500).json(error);
@@ -109,9 +109,8 @@ export async function deleteClub(req, res) {
 }
 
 export async function clubPositions(req, res) {
-  //posicion - equipo(link al perfil del equipo)- Puntos - Partidos (jugados - GEP - GF -GC -DF
+  //posición - equipo(link al perfil del equipo)- Puntos - Partidos (jugados - GEP - GF -GC -DF
   try {
-    throw new Error('error de prueba');
     const stats = await prisma.clubStats.findMany({
       include: {
         Club: {
@@ -126,7 +125,8 @@ export async function clubPositions(req, res) {
     return res.status(200).json(stats);
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: 'Error al intentar obtener las posiciones',
+      debugMessage: error.message
     });
   }
 }

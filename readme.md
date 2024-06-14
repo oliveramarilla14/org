@@ -4,7 +4,7 @@
 
 definir formato de errores
 res.status(500).json({
-message: error.message
+message: error.message o debugMessage si no existe un mensaje de error definido
 });
 
 ## todo
