@@ -2,14 +2,19 @@
 
 ## on work
 
-hacer generador de fixtures y corregir
-ya se creo los emparejamientos, ahora crear la parte de logica para los horarios
+definir formato de errores
+res.status(500).json({
+message: error.message
+});
 
 ## todo
 
 - pensar estructura para fixtures
 
 ## done
+
+hacer generador de fixtures y corregir
+ya se creo los emparejamientos, ahora crear la parte de logica para los horarios
 
 - crear seeders
   usar modelo de config para crear las configuraciones, al cargar la app que haga un fetch y que luego solo se guarde en una variable que se exporte asi evitar hacer peticiones en exceso

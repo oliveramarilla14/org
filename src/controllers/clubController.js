@@ -111,6 +111,7 @@ export async function deleteClub(req, res) {
 export async function clubPositions(req, res) {
   //posicion - equipo(link al perfil del equipo)- Puntos - Partidos (jugados - GEP - GF -GC -DF
   try {
+    throw new Error('error de prueba');
     const stats = await prisma.clubStats.findMany({
       include: {
         Club: {
@@ -124,6 +125,8 @@ export async function clubPositions(req, res) {
 
     return res.status(200).json(stats);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({
+      message: error.message
+    });
   }
 }
