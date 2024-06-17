@@ -4,7 +4,7 @@ export async function getClubs(req, res) {
   try {
     const clubs = await prisma.club.findMany();
 
-    return res.json({ clubs });
+    return res.json(clubs);
   } catch (error) {
     return res.json({ error });
   }
