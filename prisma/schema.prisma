@@ -69,7 +69,7 @@ model Player {
 }
 
 model PlayerStats {
-  playerId   Int    @id
+  playerId   Int    @unique
   Player     Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
   goalscorer Int?
   played     Int    @default(0)
