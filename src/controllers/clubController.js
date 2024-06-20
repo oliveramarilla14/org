@@ -1,4 +1,6 @@
 import { prisma } from '../database/database.js';
+import { waitTime } from '../helpers/timer.js';
+import { stringBoolean } from '../helpers/casting.js';
 
 export async function getClubs(req, res) {
   try {
@@ -6,7 +8,7 @@ export async function getClubs(req, res) {
 
     return res.json(clubs);
   } catch (error) {
-    return res.json({ error });
+    return res.status(500).json({ message: error.message });
   }
 }
 
@@ -15,7 +17,7 @@ export async function getClub(req, res) {
   const id = parseInt(req.params.id);
 
   if (isNaN(id)) {
-    return res.status(406).json({ msg: 'id invalido' });
+    return res.status(406).json({ message: 'Id invalido' });
   }
 
   const today = new Date();
@@ -43,8 +45,8 @@ export async function getClub(req, res) {
 
     return res.json(club);
   } catch (error) {
-    if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el club' });
-    return res.status(500).json(error);
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el club' });
+    return res.status(500).json({ message: error.message });
   }
 }
 
@@ -55,8 +57,8 @@ export async function createClub(req, res) {
     const club = await prisma.club.create({
       data: {
         name: data.name,
-        badge: data?.badge,
-        inscriptionPayment: data.inscriptionPayment,
+        badge: req.file && req.file.filename,
+        inscriptionPayment: stringBoolean(data.payment),
         Stats: {
           create: {}
         }
@@ -124,6 +126,7 @@ export async function clubPositions(req, res) {
 
     return res.status(200).json(stats);
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       message: 'Error al intentar obtener las posiciones',
       debugMessage: error.message
