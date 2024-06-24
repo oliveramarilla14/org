@@ -69,9 +69,10 @@ export async function createClub(req, res) {
     });
     return res.status(201).json(club);
   } catch (error) {
-    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos invalidos' });
-    if (error.code === 'P2002') return res.status(409).json({ msg: `Ya existe el equipo con el nombre ${data.name}` });
-    return res.status(500).json(error);
+    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ message: 'Datos invalidos' });
+    if (error.code === 'P2002')
+      return res.status(409).json({ message: `Ya existe el equipo con el nombre ${data.name}` });
+    return res.status(500).json({ message: error.message });
   }
 }
 
