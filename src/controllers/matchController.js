@@ -43,7 +43,6 @@ export async function editMatch(req, res) {
     });
     return res.status(202).json(match);
   } catch (error) {
-    console.log(error);
     if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el partido' });
     return res.status(500).json(error);
   }

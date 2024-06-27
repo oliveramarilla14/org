@@ -57,11 +57,11 @@ model ClubStats {
 model Player {
   id             Int              @id @default(autoincrement())
   name           String
-  teamId         Int
+  teamId         Int?
   documentNumber Int              @unique
   promYear       Int
   phoneNumber    Int?
-  Club           Club             @relation(fields: [teamId], references: [id])
+  Club           Club?            @relation(fields: [teamId], references: [id], onDelete: SetNull)
   matches        PlayersOnMatch[]
   payments       Payment[]
   amonestations  Amonestation[]

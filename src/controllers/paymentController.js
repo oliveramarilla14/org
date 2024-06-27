@@ -55,7 +55,6 @@ export async function createCuota(req, res) {
     });
     return res.status(201).json(cuota);
   } catch (error) {
-    console.log(error);
     return res.status(500).json(error);
   }
 }
@@ -167,7 +166,6 @@ export async function createMulta(req, res) {
 
     return res.status(201).json(multa);
   } catch (error) {
-    console.log(error);
     return res.status(500).json(error);
   }
 }
@@ -184,8 +182,6 @@ export async function editMulta(req, res) {
 
     return res.status(202).json(multa);
   } catch (error) {
-    console.log(error);
-
     if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos invalidos' });
     if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el club' });
     res.status(500).json(error);

@@ -5,7 +5,6 @@ export async function getAmonestations(req, res) {
   const queryParams = req.query;
 
   const whereClause = {};
-  console.log(queryParams);
   if (queryParams.name) whereClause.Player = { name: { contains: queryParams.name } };
   if (queryParams.club) whereClause.Club = { name: { contains: queryParams.club } };
   if (queryParams.type) whereClause.type = { contains: queryParams.type };
@@ -110,7 +109,6 @@ export async function editAmonestation(req, res) {
     });
     return res.json({ amonestation });
   } catch (error) {
-    console.log(error);
     if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el registro' });
     return res.status(500).json(error);
   }

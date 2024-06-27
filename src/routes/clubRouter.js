@@ -9,7 +9,7 @@ router.get('/', getClubs);
 router.get('/positions', clubPositions);
 router.post('/', upload.single('badge'), clubsValidator, createClub);
 router.get('/:id', getClub);
-router.put('/:id', updateClub);
+router.put('/:id', upload.single('badge'), updateClub);
 router.delete('/:id', deleteClub);
 
 export default router;

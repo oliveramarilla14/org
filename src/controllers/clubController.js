@@ -83,14 +83,19 @@ export async function updateClub(req, res) {
   try {
     const club = await prisma.club.update({
       where: { id },
-      data
+      data: {
+        name: data.name,
+        badge: req.file && req.file.filename,
+        inscriptionPayment: stringBoolean(data.payment)
+      }
     });
 
     return res.status(202).json(club);
   } catch (error) {
-    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos invalidos' });
-    if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el club' });
-    if (error.code === 'P2002') return res.status(409).json({ msg: `Ya existe el equipo con el nombre ${data.name}` });
+    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ message: 'Datos invalidos' });
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el club' });
+    if (error.code === 'P2002')
+      return res.status(409).json({ message: `Ya existe el equipo con el nombre ${data.name}` });
 
     res.status(500).json(error);
   }
@@ -104,15 +109,15 @@ export async function deleteClub(req, res) {
 
     return res.status(202).json(club);
   } catch (error) {
-    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos inválidos' });
-    if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el club' });
+    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ message: 'Datos inválidos' });
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el club' });
 
-    res.status(500).json(error);
+    res.status(500).json({ message: error.message });
   }
 }
 
 export async function clubPositions(req, res) {
-  //posición - equipo(link al perfil del equipo)- Puntos - Partidos (jugados - GEP - GF -GC -DF
+  //posición - equipo(link al perfil del equipo)- Puntos - Partidos (jugados - GEP - GF -GC -DF)
   try {
     const stats = await prisma.clubStats.findMany({
       include: {
@@ -127,7 +132,6 @@ export async function clubPositions(req, res) {
 
     return res.status(200).json(stats);
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       message: 'Error al intentar obtener las posiciones',
       debugMessage: error.message
