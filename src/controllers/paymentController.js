@@ -31,9 +31,9 @@ export async function getCuotas(req, res) {
       }
     });
 
-    return res.json({ cuotas });
+    return res.json(cuotas);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json({ message: error.message });
   }
 }
 
@@ -55,7 +55,7 @@ export async function createCuota(req, res) {
     });
     return res.status(201).json(cuota);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json({ message: error.message });
   }
 }
 
@@ -83,9 +83,9 @@ export async function payCuota(req, res) {
     return res.status(202).json(cuota);
   } catch (error) {
     if (error.code === 'P2025') return res.status(404).json({ msg: 'No se encuentra la cuota' });
-    if (error.message === 'La cuota ya se encuentra pagada') return res.status(409).json({ msg: error.message });
+    if (error.message === 'La cuota ya se encuentra pagada') return res.status(409).json({ message: error.message });
 
-    return res.status(500).json(error);
+    return res.status(500).json({ message: error.message });
   }
 }
 
@@ -111,9 +111,9 @@ export async function cancelPayCuota(req, res) {
 
     return res.status(202).json({ cuota });
   } catch (error) {
-    if (error.code === 'P2025') return res.status(404).json({ msg: 'No se encuentra la cuota' });
-    if (error.message === 'La cuota aun no se pago') return res.status(409).json({ msg: error.message });
-    res.status(500).json(error);
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No se encuentra la cuota' });
+    if (error.message === 'La cuota aun no se pago') return res.status(409).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -148,9 +148,9 @@ export async function getMultas(req, res) {
       }
     });
 
-    return res.json({ multas });
+    return res.json(multas);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json({ message: error.message });
   }
 }
 
@@ -166,7 +166,7 @@ export async function createMulta(req, res) {
 
     return res.status(201).json(multa);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json({ message: error.message });
   }
 }
 
@@ -182,9 +182,9 @@ export async function editMulta(req, res) {
 
     return res.status(202).json(multa);
   } catch (error) {
-    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos invalidos' });
-    if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el club' });
-    res.status(500).json(error);
+    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ message: 'Datos invalidos' });
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el club' });
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -195,10 +195,10 @@ export async function deleteMulta(req, res) {
 
     return res.status(202).json(multa);
   } catch (error) {
-    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ msg: 'Datos invalidos' });
-    if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe' });
+    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ message: 'Datos invalidos' });
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe' });
 
-    res.status(500).json(error);
+    res.status(500).json({ message: error.message });
   }
 }
 export async function payMulta(req, res) {
@@ -227,12 +227,14 @@ export async function payMulta(req, res) {
     if (error.code === 'P2025') return res.status(404).json({ msg: 'No se encuentra la multa' });
     if (error.message === 'La multa ya se encuentra pagada') return res.status(409).json({ msg: error.message });
 
-    return res.status(500).json(error);
+    res.status(500).json({ message: error.message });
   }
 }
 
 export async function cancelPayMulta(req, res) {
   const id = parseInt(req.params.id);
+
+  console.log(id);
 
   try {
     const multa = await prisma.$transaction(async (prismaT) => {

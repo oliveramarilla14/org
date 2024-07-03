@@ -3,7 +3,7 @@ import { prisma } from '../database/database.js';
 export async function getConfig(req, res) {
   const config = await prisma.config.findFirst({ where: { id: 1 } });
 
-  res.json(config);
+  return res.json(config);
 }
 
 export async function createConfig(req, res) {
@@ -12,7 +12,7 @@ export async function createConfig(req, res) {
     data
   });
 
-  res.status(201).json(config);
+  return res.status(201).json(config);
 }
 
 export async function editConfig(req, res) {
@@ -22,5 +22,5 @@ export async function editConfig(req, res) {
     data
   });
 
-  res.status(201).json(config);
+  return res.status(201).json(config);
 }
