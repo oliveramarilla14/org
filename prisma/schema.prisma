@@ -109,9 +109,9 @@ model PlayersOnMatch {
 //revisar si es necesario club y player
 model Payment {
   id            Int            @id @default(autoincrement())
-  Club          Club           @relation(fields: [clubId], references: [id])
-  clubId        Int
-  Player        Player?        @relation(fields: [playerId], references: [id])
+  Club          Club?          @relation(fields: [clubId], references: [id], onDelete: SetNull)
+  clubId        Int?
+  Player        Player?        @relation(fields: [playerId], references: [id], onDelete: SetNull)
   playerId      Int?
   type          String
   price         Int
