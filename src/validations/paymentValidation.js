@@ -16,7 +16,7 @@ export const CuotaValidator = [
 
 export const multaValidator = [
   body('clubId', 'El club es requerido y debe ser un id').notEmpty().isInt(),
-  body('playerId', 'El jugador debe ser un id').isInt(),
+  body('playerId', 'El jugador debe ser un id'),
   body('type').notEmpty().isString(),
   body('price').notEmpty().isInt(),
   body('deadline').notEmpty().isString(),

@@ -5,18 +5,15 @@ export async function getCuotas(req, res) {
   //fitro de busqueda para nombre de jugador y nombre de club
   const queryParams = req.query;
   //refactor esta parte como amonestation controller
-  let name = '';
-  let club = '';
+
   let noPaid = false;
 
-  if (queryParams.name) name = queryParams.name;
-  if (queryParams.club) club = queryParams.club;
-
   const whereClause = {
-    type: 'cuota',
-    Player: { name: { contains: name } },
-    Club: { name: { contains: club } }
+    type: 'cuota'
   };
+
+  if (queryParams.name) whereClause.Player = { name: { contains: queryParams.name } };
+  if (queryParams.club) whereClause.Club = { name: { contains: queryParams.club } };
 
   if (noPaid) {
     whereClause.paid = false;
@@ -120,20 +117,16 @@ export async function cancelPayCuota(req, res) {
 export async function getMultas(req, res) {
   const queryParams = req.query;
   //refactor esta parte como amonestation controller
-  let name = '';
-  let club = '';
-  let noPaid = false;
 
-  if (queryParams.name) name = queryParams.name;
-  if (queryParams.club) club = queryParams.club;
+  let noPaid = false;
 
   const whereClause = {
     NOT: {
       type: 'cuota'
-    },
-    Player: { name: { contains: name } },
-    Club: { name: { contains: club } }
+    }
   };
+  if (queryParams.name) whereClause.Player = { name: { contains: queryParams.name } };
+  if (queryParams.club) whereClause.Club = { name: { contains: queryParams.club } };
 
   if (noPaid) {
     whereClause.paid = false;
@@ -157,6 +150,7 @@ export async function getMultas(req, res) {
 export async function createMulta(req, res) {
   const data = req.body;
 
+  console.log(data);
   try {
     const multa = await prisma.payment.create({
       data: {
@@ -233,8 +227,6 @@ export async function payMulta(req, res) {
 
 export async function cancelPayMulta(req, res) {
   const id = parseInt(req.params.id);
-
-  console.log(id);
 
   try {
     const multa = await prisma.$transaction(async (prismaT) => {

@@ -1,5 +1,4 @@
 import { prisma } from '../database/database.js';
-import { waitTime } from '../helpers/timer.js';
 import { stringBoolean } from '../helpers/casting.js';
 
 export async function getClubs(req, res) {
@@ -8,6 +7,21 @@ export async function getClubs(req, res) {
 
     return res.json(clubs);
   } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+export async function getClubsPlayers(req, res) {
+  try {
+    const club = await prisma.club.findMany({
+      include: {
+        players: true
+      }
+    });
+
+    return res.json(club);
+  } catch (error) {
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el club' });
     return res.status(500).json({ message: error.message });
   }
 }

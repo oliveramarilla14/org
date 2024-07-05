@@ -118,6 +118,7 @@ model Payment {
   deadline      DateTime
   paid          Boolean        @default(false)
   paydate       DateTime?
+  observation   String?
   amonestations Amonestation[]
 }
 
