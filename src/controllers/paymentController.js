@@ -147,6 +147,29 @@ export async function getMultas(req, res) {
   }
 }
 
+export async function getMulta(req, res) {
+  const { id } = req.params;
+
+  console.log(id);
+
+  try {
+    const multas = await prisma.payment.findFirst({
+      where: {
+        id: parseInt(id)
+      },
+      include: {
+        Club: true,
+        Player: true
+      }
+    });
+
+    return res.json(multas);
+  } catch (error) {
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el pago' });
+    return res.status(500).json({ message: error.message });
+  }
+}
+
 export async function createMulta(req, res) {
   const data = req.body;
 

@@ -7,6 +7,7 @@ import {
   deleteMulta,
   editMulta,
   getCuotas,
+  getMulta,
   getMultas,
   payCuota,
   payMulta
@@ -21,6 +22,7 @@ router.post('/cuotas/:id/pay', payCuota);
 router.delete('/cuotas/:id/pay', cancelPayCuota);
 
 router.get('/multas', getMultas);
+router.get('/multas/:id', getMulta);
 router.post('/multas', multaValidator, createMulta);
 router.put('/multas/:id', multaValidator, editMulta);
 router.delete('/multas/:id', deleteMulta);
