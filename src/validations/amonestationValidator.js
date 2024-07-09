@@ -3,7 +3,7 @@ import { body, validationResult } from 'express-validator';
 export const amonestationValidator = [
   body('clubId', 'el club es requerido y debe ser un int').notEmpty().isInt(),
   body('type', 'la amonestacion no corresponde con los tipos establecidos').notEmpty().isString(),
-  body('playerId').isInt().optional(),
+  body('playerId', 'El jugador debe ser un id'),
   body('paymentId').isInt().optional(),
   body('matchesToPay').isInt().optional(),
   body('matchesPaid').isInt().optional(),

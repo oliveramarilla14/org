@@ -137,7 +137,7 @@ model Amonestation {
   observation    String?
   pointsDeducted Int?
   matchesToPay   Int?
-  matchesPaid    Int?
+  matchesPaid    Int      @default(0)
   createdAt      DateTime @default(now())
 }
 

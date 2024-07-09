@@ -35,7 +35,8 @@ export async function createAmonestation(req, res) {
 
     return res.status(201).json(amonestation);
   } catch (error) {
-    return res.status(500).json({ error: error });
+    console.log(error);
+    return res.status(500).json({ message: error.message });
   }
 }
 
@@ -113,6 +114,7 @@ export async function editAmonestation(req, res) {
     return res.status(500).json(error);
   }
 }
+
 export async function deleteAmonestation(req, res) {
   const id = parseInt(req.params.id);
 

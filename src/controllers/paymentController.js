@@ -173,7 +173,6 @@ export async function getMulta(req, res) {
 export async function createMulta(req, res) {
   const data = req.body;
 
-  console.log(data);
   try {
     const multa = await prisma.payment.create({
       data: {
