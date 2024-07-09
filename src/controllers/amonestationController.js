@@ -17,9 +17,9 @@ export async function getAmonestations(req, res) {
         Player: true
       }
     });
-    return res.json({ amonestations });
+    return res.json(amonestations);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json({ message: error.message });
   }
 }
 
