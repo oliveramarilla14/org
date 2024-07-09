@@ -91,7 +91,7 @@ export async function getAmonestation(req, res) {
 
     return res.json({ amonestation });
   } catch (error) {
-    if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el registro' });
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el registro' });
     return res.status(500).json(error);
   }
 }
@@ -111,5 +111,19 @@ export async function editAmonestation(req, res) {
   } catch (error) {
     if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el registro' });
     return res.status(500).json(error);
+  }
+}
+export async function deleteAmonestation(req, res) {
+  const id = parseInt(req.params.id);
+
+  try {
+    const amonestation = await prisma.amonestation.delete({ where: { id } });
+
+    return res.status(202).json(amonestation);
+  } catch (error) {
+    if (error.name === 'PrismaClientValidationError') return res.status(409).json({ message: 'Datos invalidos' });
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe' });
+
+    res.status(500).json({ message: error.message });
   }
 }
