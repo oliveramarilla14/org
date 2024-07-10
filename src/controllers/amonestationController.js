@@ -90,10 +90,10 @@ export async function getAmonestation(req, res) {
       where: { id }
     });
 
-    return res.json({ amonestation });
+    return res.json(amonestation);
   } catch (error) {
     if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el registro' });
-    return res.status(500).json(error);
+    return res.status(500).json({ message: error.message });
   }
 }
 
@@ -110,8 +110,8 @@ export async function editAmonestation(req, res) {
     });
     return res.json({ amonestation });
   } catch (error) {
-    if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el registro' });
-    return res.status(500).json(error);
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el registro' });
+    return res.status(500).json({ message: error.message });
   }
 }
 
