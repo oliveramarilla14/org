@@ -4,9 +4,9 @@ export async function getMatches(req, res) {
   try {
     const matches = await prisma.match.findMany();
 
-    return res.json({ matches });
+    return res.json(matches);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json({ message: error.message });
   }
 }
 
@@ -18,7 +18,7 @@ export async function getMatch(req, res) {
     return res.json({ match });
   } catch (error) {
     if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el partido' });
-    return res.status(500).json(error);
+    return res.status(500).json({ message: error.message });
   }
 }
 
@@ -30,7 +30,7 @@ export async function createMatch(req, res) {
 
     return res.status(201).json({ match });
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json({ message: error.message });
   }
 }
 export async function editMatch(req, res) {
@@ -43,8 +43,8 @@ export async function editMatch(req, res) {
     });
     return res.status(202).json(match);
   } catch (error) {
-    if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el partido' });
-    return res.status(500).json(error);
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el partido' });
+    return res.status(500).json({ message: error.message });
   }
 }
 export async function deleteMatch(req, res) {
@@ -54,7 +54,7 @@ export async function deleteMatch(req, res) {
     const match = await prisma.match.delete({ where: { id } });
     return res.status(202).json({ match });
   } catch (error) {
-    if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el partido' });
-    return res.status(500).json(error);
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el partido' });
+    return res.status(500).json({ message: error.message });
   }
 }
