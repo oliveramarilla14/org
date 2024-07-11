@@ -20,7 +20,6 @@ export async function generateFixture(req, res) {
   const body = req.body;
   const clubs = await prisma.club.findMany();
   const config = await prisma.config.findFirst();
-  console.log(config);
 
   try {
     if (!config) throw new Error('No existe configuracion');

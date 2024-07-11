@@ -2,7 +2,12 @@ import { prisma } from '../database/database.js';
 
 export async function getMatches(req, res) {
   try {
-    const matches = await prisma.match.findMany();
+    const matches = await prisma.match.findMany({
+      include: {
+        FirstTeam: true,
+        SecondTeam: true
+      }
+    });
 
     return res.json(matches);
   } catch (error) {
