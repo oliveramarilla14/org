@@ -21,8 +21,16 @@ export async function getMatch(req, res) {
     const match = await prisma.match.findFirstOrThrow({
       where: { id },
       include: {
-        FirstTeam: true,
-        SecondTeam: true
+        FirstTeam: {
+          include: {
+            players: true
+          }
+        },
+        SecondTeam: {
+          include: {
+            players: true
+          }
+        }
       }
     });
 

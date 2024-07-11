@@ -92,7 +92,7 @@ model Match {
   firstTeamGoals  Int?
   secondTeamGoals Int?
   fecha           Int
-  result          Int? // id del ganador, o si empate 0
+  result          Int? // id del ganador, o si empate -1
   players         PlayersOnMatch[]
   amonestations   Amonestation[]
 }
