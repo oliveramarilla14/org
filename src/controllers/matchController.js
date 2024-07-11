@@ -18,11 +18,17 @@ export async function getMatches(req, res) {
 export async function getMatch(req, res) {
   const id = parseInt(req.params.id);
   try {
-    const match = await prisma.match.findFirstOrThrow({ where: { id } });
+    const match = await prisma.match.findFirstOrThrow({
+      where: { id },
+      include: {
+        FirstTeam: true,
+        SecondTeam: true
+      }
+    });
 
-    return res.json({ match });
+    return res.json(match);
   } catch (error) {
-    if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el partido' });
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el partido' });
     return res.status(500).json({ message: error.message });
   }
 }

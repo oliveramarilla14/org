@@ -83,16 +83,18 @@ model PlayerStats {
 }
 
 model Match {
-  id            Int              @id @default(autoincrement())
-  firstTeamId   Int
-  FirstTeam     Club             @relation(name: "FirstTeamMatches", fields: [firstTeamId], references: [id])
-  secondTeamId  Int
-  SecondTeam    Club             @relation(name: "SecondTeamMatches", fields: [secondTeamId], references: [id])
-  hora          String?
-  fecha         Int
-  result        Int? // id del ganador, o si empate 0
-  players       PlayersOnMatch[]
-  amonestations Amonestation[]
+  id              Int              @id @default(autoincrement())
+  firstTeamId     Int
+  FirstTeam       Club             @relation(name: "FirstTeamMatches", fields: [firstTeamId], references: [id])
+  secondTeamId    Int
+  SecondTeam      Club             @relation(name: "SecondTeamMatches", fields: [secondTeamId], references: [id])
+  hora            String?
+  firstTeamGoals  Int?
+  secondTeamGoals Int?
+  fecha           Int
+  result          Int? // id del ganador, o si empate 0
+  players         PlayersOnMatch[]
+  amonestations   Amonestation[]
 }
 
 model PlayersOnMatch {
