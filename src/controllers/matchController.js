@@ -1,4 +1,6 @@
 import { prisma } from '../database/database.js';
+import { addMatchPlayers } from '../functions/addMatchPlayers.js';
+import { addStats } from '../functions/stats.js';
 
 export async function getMatches(req, res) {
   try {
@@ -74,6 +76,51 @@ export async function deleteMatch(req, res) {
     return res.status(202).json({ match });
   } catch (error) {
     if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el partido' });
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+/*
+  al finalizar debe
+  
+  - actualizar Match con datos del match ✅
+  - actualizar tabla de ClubStats ✅
+  - crear un playerOnMatch por cada jugador de cada equipo ✅
+  - actualizar tabla de PlayerStats
+    
+
+    *- crear amonestation en caso de amonestación
+    *- crear multa en caso de amonestación
+  */
+
+export async function finishMatch(req, res) {
+  const data = req.body;
+  const { match, playersOnMatch } = data;
+  let winner;
+
+  if (match.firstTeamGoals === match.secondTeamGoals) {
+    winner = -1;
+  } else {
+    winner = match.firstTeamGoals > match.secondTeamGoals ? match.firstTeamId : match.secondTeamId;
+  }
+
+  try {
+    const partido = await prisma.match.update({
+      where: {
+        id: match.id
+      },
+      data: {
+        firstTeamGoals: match.firstTeamGoals,
+        secondTeamGoals: match.secondTeamGoals,
+        result: winner
+      }
+    });
+
+    await addStats(data, winner);
+    await addMatchPlayers(data);
+
+    return res.status(500).json({ message: 'llega hasta el final' });
+  } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 }
