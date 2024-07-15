@@ -1,5 +1,6 @@
 import { prisma } from '../database/database.js';
 import { addMatchPlayers } from '../functions/addMatchPlayers.js';
+import addPlayerStats from '../functions/addPlayerStats.js';
 import { addStats } from '../functions/stats.js';
 
 export async function getMatches(req, res) {
@@ -86,7 +87,7 @@ export async function deleteMatch(req, res) {
   - actualizar Match con datos del match ✅
   - actualizar tabla de ClubStats ✅
   - crear un playerOnMatch por cada jugador de cada equipo ✅
-  - actualizar tabla de PlayerStats
+  - actualizar tabla de PlayerStats ✅
     
 
     *- crear amonestation en caso de amonestación
@@ -95,7 +96,7 @@ export async function deleteMatch(req, res) {
 
 export async function finishMatch(req, res) {
   const data = req.body;
-  const { match, playersOnMatch } = data;
+  const { match } = data;
   let winner;
 
   if (match.firstTeamGoals === match.secondTeamGoals) {
@@ -118,8 +119,9 @@ export async function finishMatch(req, res) {
 
     await addStats(data, winner);
     await addMatchPlayers(data);
+    await addPlayerStats(data, winner);
 
-    return res.status(500).json({ message: 'llega hasta el final' });
+    return res.status(202).json(partido);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
