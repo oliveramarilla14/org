@@ -27,16 +27,17 @@ model User {
 }
 
 model Club {
-  id                 Int            @id @default(autoincrement())
+  id                 Int              @id @default(autoincrement())
   badge              String?
-  name               String         @unique
-  inscriptionPayment Boolean        @default(false)
+  name               String           @unique
+  inscriptionPayment Boolean          @default(false)
   players            Player[]
-  firstTeamMatches   Match[]        @relation(name: "FirstTeamMatches")
-  secondTeamMatches  Match[]        @relation(name: "SecondTeamMatches")
+  firstTeamMatches   Match[]          @relation(name: "FirstTeamMatches")
+  secondTeamMatches  Match[]          @relation(name: "SecondTeamMatches")
   payments           Payment[]
   amonestations      Amonestation[]
   Stats              ClubStats?
+  PlayersOnMatch     PlayersOnMatch[]
 }
 
 model ClubStats {
@@ -101,6 +102,8 @@ model PlayersOnMatch {
   id       Int    @id @default(autoincrement())
   Player   Player @relation(fields: [playerId], references: [id])
   playerId Int
+  Club     Club   @relation(fields: [clubId], references: [id])
+  clubId   Int
   Match    Match  @relation(fields: [matchId], references: [id])
   matchId  Int
   goals    Int?

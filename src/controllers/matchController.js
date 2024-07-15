@@ -37,6 +37,23 @@ export async function getMatch(req, res) {
       }
     });
 
+    if (match.result) {
+      const playersOnMatch = await prisma.playersOnMatch.findMany({
+        where: {
+          matchId: match.id
+        },
+        include: {
+          Player: true
+        }
+      });
+
+      const team1 = playersOnMatch.filter((player) => player.clubId === match.firstTeamId);
+      const team2 = playersOnMatch.filter((player) => player.clubId === match.secondTeamId);
+
+      match.team1 = team1;
+      match.team2 = team2;
+    }
+
     return res.json(match);
   } catch (error) {
     if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el partido' });

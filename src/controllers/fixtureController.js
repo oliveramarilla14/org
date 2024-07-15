@@ -28,8 +28,6 @@ export async function generateFixture(req, res) {
     } else {
       const matches = await prisma.match.findMany();
       if (matches.length > 0) {
-        console.log('entra');
-
         throw new Error('Ya existen Partidos');
       }
     }
