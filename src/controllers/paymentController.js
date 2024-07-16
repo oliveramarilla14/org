@@ -150,8 +150,6 @@ export async function getMultas(req, res) {
 export async function getMulta(req, res) {
   const { id } = req.params;
 
-  console.log(id);
-
   try {
     const multas = await prisma.payment.findFirst({
       where: {
