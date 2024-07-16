@@ -1,14 +1,3 @@
-// agregar un Enum al migrar a postgres, ya que en sqlite no existe los enum
-// enum PaymentType {
-//   multa
-//   cuota
-//   derechoPartido
-// }
-// num AmonestationType {
-//   multa
-//   cuota
-//   derechoPartido
-// }
 generator client {
   provider = "prisma-client-js"
 }
