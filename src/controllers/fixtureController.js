@@ -7,6 +7,18 @@ export async function getFecha(req, res) {
     const matches = await prisma.match.findMany({
       where: {
         fecha
+      },
+      include: {
+        FirstTeam: {
+          include: {
+            players: true
+          }
+        },
+        SecondTeam: {
+          include: {
+            players: true
+          }
+        }
       }
     });
 
