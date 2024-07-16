@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { createConfig, editConfig, getConfig } from '../controllers/configController.js';
+import { editConfig, getConfig, modifyConfig } from '../controllers/configController.js';
 
 const router = Router();
 
 router.get('/', getConfig);
-router.post('/', createConfig);
+router.post('/', modifyConfig);
 router.put('/', editConfig);
 
 export default router;

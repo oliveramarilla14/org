@@ -149,7 +149,6 @@ model Amonestation {
 model Config {
   id                  Int     @id @default(autoincrement())
   matchStartTime      String
-  matchEndTime        String
   matchDuration       Int
   matchInterval       String
   matchPrice          Int

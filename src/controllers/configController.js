@@ -15,6 +15,17 @@ export async function createConfig(req, res) {
   return res.status(201).json(config);
 }
 
+export async function modifyConfig(req, res) {
+  const data = req.body;
+  const config = await prisma.config.upsert({
+    where: { id: 1 },
+    create: data,
+    update: data
+  });
+
+  return res.status(201).json(config);
+}
+
 export async function editConfig(req, res) {
   const data = req.body;
   const config = await prisma.config.update({
