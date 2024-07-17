@@ -8,13 +8,14 @@ import {
   getMatches
 } from '../controllers/matchController.js';
 import { matchValidator } from '../validations/matchValidator.js';
-import { generateFixture, getFecha } from '../controllers/fixtureController.js';
+import { deleteFixture, generateFixture, getFecha } from '../controllers/fixtureController.js';
 
 const router = Router();
 
 router
   .post('/fixture/generate', generateFixture)
   .get('/fixture/:fecha', getFecha)
+  .delete('/fixture', deleteFixture)
   .get('/', getMatches)
   .get('/:id', getMatch)
   .post('/', matchValidator, createMatch)

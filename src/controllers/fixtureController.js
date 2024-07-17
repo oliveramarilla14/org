@@ -52,3 +52,14 @@ export async function generateFixture(req, res) {
     return res.status(500).json({ message: error.message });
   }
 }
+
+export async function deleteFixture(req, res) {
+  try {
+    const deleted = await prisma.match.deleteMany({});
+
+    return res.json(deleted);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
+  }
+}
