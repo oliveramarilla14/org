@@ -1,6 +1,7 @@
 import { prisma } from '../database/database.js';
 import { addMatchPlayers } from '../functions/addMatchPlayers.js';
 import addPlayerStats from '../functions/addPlayerStats.js';
+import { calcClubPositions, calcGoalscorerPositions } from '../functions/generatePositions.js';
 import { addStats } from '../functions/stats.js';
 
 export async function getMatches(req, res) {
@@ -137,6 +138,8 @@ export async function finishMatch(req, res) {
     await addStats(data, winner);
     await addMatchPlayers(data);
     await addPlayerStats(data, winner);
+    await calcClubPositions();
+    await calcGoalscorerPositions();
 
     return res.status(202).json(partido);
   } catch (error) {
