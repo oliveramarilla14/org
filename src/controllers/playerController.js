@@ -1,4 +1,5 @@
 import { prisma } from '../database/database.js';
+import { generatePlayerCuota } from '../functions/generateCuotas.js';
 
 export async function playerStats(req, res) {
   //Jugador - equipo - cantidad (amarillas goles goles en contra) - partidos jugados - promedio cantidad/partido
@@ -60,6 +61,8 @@ export async function createPlayer(req, res) {
         });
       })
     );
+
+    createdPlayers.forEach(async (player) => await generatePlayerCuota(player.id));
 
     return res.status(201).json(createdPlayers);
   } catch (error) {

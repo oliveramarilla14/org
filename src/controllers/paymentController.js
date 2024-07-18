@@ -1,4 +1,5 @@
 import { prisma } from '../database/database.js';
+import { generateMonthlyCuota, generatePlayerCuota } from '../functions/generateCuotas.js';
 
 export async function getCuotas(req, res) {
   // jugador - equipo - cuotas (pagadas/pendientes)
