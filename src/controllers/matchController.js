@@ -1,4 +1,5 @@
 import { prisma } from '../database/database.js';
+import { handleAmonestations } from '../functions/addAmonestations.js';
 import { addMatchPlayers } from '../functions/addMatchPlayers.js';
 import addPlayerStats from '../functions/addPlayerStats.js';
 import { calcClubPositions, calcGoalscorerPositions } from '../functions/generatePositions.js';
@@ -99,19 +100,6 @@ export async function deleteMatch(req, res) {
   }
 }
 
-/*
-  al finalizar debe
-  
-  - actualizar Match con datos del match ✅
-  - actualizar tabla de ClubStats ✅
-  - crear un playerOnMatch por cada jugador de cada equipo ✅
-  - actualizar tabla de PlayerStats ✅
-    
-
-    *- crear amonestation en caso de amonestación
-    *- crear multa en caso de amonestación
-  */
-
 export async function finishMatch(req, res) {
   const data = req.body;
   const { match } = data;
@@ -140,6 +128,7 @@ export async function finishMatch(req, res) {
     await addPlayerStats(data, winner);
     await calcClubPositions();
     await calcGoalscorerPositions();
+    await handleAmonestations(data);
 
     return res.status(202).json(partido);
   } catch (error) {
