@@ -1,5 +1,5 @@
 import { prisma } from '../database/database.js';
-import { handleCreateAmonestations } from '../functions/addAmonestations.js';
+import { handleCreateAmonestations, handleMatchesAmonestations } from '../functions/handleAmonestations.js';
 import { addMatchPlayers } from '../functions/addMatchPlayers.js';
 import addPlayerStats from '../functions/addPlayerStats.js';
 import { calcClubPositions, calcGoalscorerPositions } from '../functions/generatePositions.js';
@@ -139,6 +139,7 @@ export async function finishMatch(req, res) {
       }
     });
 
+    await handleMatchesAmonestations(data);
     await addStats(data, winner);
     await addMatchPlayers(data);
     await addPlayerStats(data, winner);

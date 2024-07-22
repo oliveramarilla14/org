@@ -6,6 +6,47 @@ export async function handleCreateAmonestations({ playersOnMatch, match }) {
   playersOnMatch.team2.forEach(async (player) => await handleCards(player, match, 'secondTeamId'));
 }
 
+export async function handleMatchesAmonestations({ match }) {
+  const players1 = await prisma.player.findMany({
+    where: {
+      teamId: match.firstTeamId
+    },
+    include: {
+      amonestations: true
+    }
+  });
+
+  const players2 = await prisma.player.findMany({
+    where: {
+      teamId: match.secondTeamId
+    },
+    include: {
+      amonestations: true
+    }
+  });
+  const allPlayers = [...players1, ...players2];
+
+  allPlayers.forEach((player) => {
+    player.amonestations.forEach(async (amonestation) => {
+      if (amonestation.matchesToPay > 0 && amonestation.matchesPaid < amonestation.matchesToPay) {
+        const newMatchPaid = amonestation.matchesPaid + 1;
+        const data = {
+          matchesPaid: newMatchPaid
+        };
+
+        if (newMatchPaid === amonestation.matchesToPay) {
+          data.paid = true;
+        }
+
+        await prisma.amonestation.update({
+          where: { id: amonestation.id },
+          data
+        });
+      }
+    });
+  });
+}
+
 async function handleCards(player, match, team) {
   const config = await prisma.config.findFirst();
 
