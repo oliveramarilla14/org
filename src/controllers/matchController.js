@@ -1,5 +1,5 @@
 import { prisma } from '../database/database.js';
-import { handleAmonestations } from '../functions/addAmonestations.js';
+import { handleCreateAmonestations } from '../functions/addAmonestations.js';
 import { addMatchPlayers } from '../functions/addMatchPlayers.js';
 import addPlayerStats from '../functions/addPlayerStats.js';
 import { calcClubPositions, calcGoalscorerPositions } from '../functions/generatePositions.js';
@@ -20,22 +20,38 @@ export async function getMatches(req, res) {
   }
 }
 
+//deberia crear un paid en amonestations, para poder filtrar bien
 export async function getMatch(req, res) {
   const id = parseInt(req.params.id);
+  const today = new Date();
+
+  const teamQuery = {
+    include: {
+      players: {
+        include: {
+          payments: {
+            where: {
+              paid: false,
+              deadline: {
+                lt: today
+              }
+            }
+          },
+          amonestations: {
+            where: {
+              paid: false
+            }
+          }
+        }
+      }
+    }
+  };
   try {
     const match = await prisma.match.findFirstOrThrow({
       where: { id },
       include: {
-        FirstTeam: {
-          include: {
-            players: true
-          }
-        },
-        SecondTeam: {
-          include: {
-            players: true
-          }
-        }
+        FirstTeam: teamQuery,
+        SecondTeam: teamQuery
       }
     });
 
@@ -126,9 +142,9 @@ export async function finishMatch(req, res) {
     await addStats(data, winner);
     await addMatchPlayers(data);
     await addPlayerStats(data, winner);
+    await handleCreateAmonestations(data);
     await calcClubPositions();
     await calcGoalscorerPositions();
-    await handleAmonestations(data);
 
     return res.status(202).json(partido);
   } catch (error) {

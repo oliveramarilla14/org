@@ -39,7 +39,9 @@ export async function createAmonestation(req, res) {
   }
 }
 
+//Actualizar con nueva columna paid
 export async function payAmonestation(req, res) {
+  return;
   const id = parseInt(req.params.id);
 
   try {

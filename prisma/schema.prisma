@@ -128,6 +128,7 @@ model Amonestation {
   Payment        Payment? @relation(fields: [paymentId], references: [id])
   paymentId      Int?
   type           String
+  paid           Boolean  @default(false)
   observation    String?
   pointsDeducted Int?
   matchesToPay   Int?

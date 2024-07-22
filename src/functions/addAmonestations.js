@@ -1,7 +1,7 @@
 import { add } from 'date-fns';
 import { prisma } from '../database/database.js';
 
-export async function handleAmonestations({ playersOnMatch, match }) {
+export async function handleCreateAmonestations({ playersOnMatch, match }) {
   playersOnMatch.team1.forEach(async (player) => await handleCards(player, match, 'firstTeamId'));
   playersOnMatch.team2.forEach(async (player) => await handleCards(player, match, 'secondTeamId'));
 }
