@@ -12,7 +12,11 @@ export async function handleMatchesAmonestations({ match }) {
       teamId: match.firstTeamId
     },
     include: {
-      amonestations: true
+      amonestations: {
+        where: {
+          paid: false
+        }
+      }
     }
   });
 
@@ -21,7 +25,11 @@ export async function handleMatchesAmonestations({ match }) {
       teamId: match.secondTeamId
     },
     include: {
-      amonestations: true
+      amonestations: {
+        where: {
+          paid: false
+        }
+      }
     }
   });
   const allPlayers = [...players1, ...players2];

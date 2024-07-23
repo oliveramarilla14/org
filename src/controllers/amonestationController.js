@@ -27,6 +27,14 @@ export async function createAmonestation(req, res) {
   const data = req.body;
 
   try {
+    if (data.pointsDeducted > 0) {
+      await prisma.clubStats.update({
+        where: { clubId: data.clubId },
+        data: { points: { decrement: data.pointsDeducted } }
+      });
+
+      data.paid = true;
+    }
     const amonestation = await prisma.amonestation.create({
       data: {
         ...data
