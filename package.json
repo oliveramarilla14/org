@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node --watch --env-file=.env src/index.js",
     "start": "node  --env-file=.env src/index.js",
-    "seed": "node ./src/database/seeder"
+    "seed": "node ./src/database/seeder",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "Oliver Amarilla",
