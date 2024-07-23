@@ -2,6 +2,7 @@ import { prisma } from '../database/database.js';
 
 export const calcClubPositions = async () => {
   const stats = await prisma.clubStats.findMany();
+  console.log('entra');
 
   /*
   criterios
@@ -21,15 +22,16 @@ export const calcClubPositions = async () => {
       return a.conceed - b.conceed;
     }
   });
-
   stats.forEach(async (team, index) => {
     const position = index + 1;
-    await prisma.clubStats.update({
+    const newStat = await prisma.clubStats.update({
       where: { clubId: team.clubId },
       data: {
         position
       }
     });
+
+    console.log(newStat);
   });
 };
 

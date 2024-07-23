@@ -1,4 +1,5 @@
 import { prisma } from '../database/database.js';
+import { calcClubPositions } from '../functions/generatePositions.js';
 
 export async function getAmonestations(req, res) {
   //jugador - equipo - razon - sancion (puntos, partidos, etc) - ya se cumplio- obs - pago -fecha creacion
@@ -25,7 +26,7 @@ export async function getAmonestations(req, res) {
 
 export async function createAmonestation(req, res) {
   const data = req.body;
-
+  ``;
   try {
     if (data.pointsDeducted > 0) {
       await prisma.clubStats.update({
@@ -34,6 +35,8 @@ export async function createAmonestation(req, res) {
       });
 
       data.paid = true;
+
+      await calcClubPositions();
     }
     const amonestation = await prisma.amonestation.create({
       data: {
@@ -49,45 +52,80 @@ export async function createAmonestation(req, res) {
 
 //Actualizar con nueva columna paid
 export async function payAmonestation(req, res) {
-  return;
   const id = parseInt(req.params.id);
 
   try {
-    const amonestation = await prisma.$transaction(async (prismaT) => {
-      const actual = await prismaT.amonestation.findFirst({ where: { id: id } });
-
-      if (actual.pointsDeducted && actual.matchesPaid < 1) {
-        await prismaT.clubStats.update({
-          where: { clubId: actual.clubId },
-          data: { points: { decrement: actual.pointsDeducted } }
-        });
-
-        const updated = await prismaT.amonestation.update({
-          where: { id: actual.id },
-          data: {
-            matchesToPay: 1,
-            matchesPaid: 1
-          }
-        });
-
-        return updated;
-      }
-
-      if (!actual.pointsDeducted && actual.matchesToPay > 0 && actual.matchesPaid < actual.matchesToPay) {
-        const updated = await prismaT.amonestation.update({
-          where: { id: actual.id },
-          data: {
-            matchesPaid: { increment: 1 }
-          }
-        });
-
-        return updated;
-      }
+    const check = await prisma.amonestation.findUniqueOrThrow({
+      where: { id }
     });
-    return res.json({ amonestation });
+
+    if (check.paid) throw new Error('La amonestacion ya se cumplio');
+    if (!check.pointsDeducted) throw new Error('No hay puntos para deducir');
+
+    const amonestation = await prisma.$transaction(async (prismaT) => {
+      await prismaT.clubStats.update({
+        where: {
+          clubId: check.clubId
+        },
+        data: {
+          points: {
+            decrement: check.pointsDeducted
+          }
+        }
+      });
+
+      return prismaT.amonestation.update({
+        where: { id: check.id },
+        data: {
+          paid: true
+        }
+      });
+    });
+    await calcClubPositions();
+
+    return res.json(amonestation);
   } catch (error) {
     if (error.code === 'P2025') return res.status(404).json({ msg: 'No existe el registro' });
     return res.status(500).json(error);
+  }
+}
+
+export async function cancelPayAmonestation(req, res) {
+  const id = parseInt(req.params.id);
+
+  try {
+    const check = await prisma.amonestation.findUniqueOrThrow({
+      where: { id }
+    });
+
+    if (!check.paid) throw new Error('La amonestacion aun no se cumplio ');
+    if (!check.pointsDeducted) throw new Error('Solo se puede cancelar la deduccion de puntos');
+
+    const amonestation = await prisma.$transaction(async (prismaT) => {
+      await prismaT.clubStats.update({
+        where: {
+          clubId: check.clubId
+        },
+        data: {
+          points: {
+            increment: check.pointsDeducted
+          }
+        }
+      });
+
+      return prismaT.amonestation.update({
+        where: { id: check.id },
+        data: {
+          paid: false
+        }
+      });
+    });
+    await calcClubPositions();
+
+    return res.json(amonestation);
+  } catch (error) {
+    if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el registro' });
+    return res.status(500).json({ message: error.message });
   }
 }
 
