@@ -106,6 +106,7 @@ export async function updateClub(req, res) {
 
     return res.status(202).json(club);
   } catch (error) {
+    console.log(error);
     if (error.name === 'PrismaClientValidationError') return res.status(409).json({ message: 'Datos invalidos' });
     if (error.code === 'P2025') return res.status(404).json({ message: 'No existe el club' });
     if (error.code === 'P2002')
