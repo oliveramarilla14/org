@@ -33,19 +33,15 @@ export async function generatePlayerCuota(playerId) {
   const precio = config.monthSocialPrice;
   const data = [];
 
-  for (let i = 0; i < 6; i++) {
-    //genera 6 cuotas
-    const cuota = {
-      clubId: player.teamId,
-      playerId: player.id,
-      type: 'cuota',
-      deadline: new Date(`${actualMonth + i}-${config.monthSocialPayDay}-2024`),
-      price: precio
-    };
+  const cuota = {
+    clubId: player.teamId,
+    playerId: player.id,
+    type: 'cuota',
+    deadline: new Date(`${actualMonth}-${config.monthSocialPayDay}-2024`),
+    price: precio
+  };
 
-    data.push(cuota);
-  }
-  await prisma.payment.createMany({
-    data
+  await prisma.payment.create({
+    data: cuota
   });
 }
